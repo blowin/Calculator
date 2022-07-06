@@ -2,65 +2,20 @@ namespace Calculator
 {
     public partial class FormCalculator : Form
     {
-        private float _a;
+        private decimal _a;
         private char _arithmeticOperation;
         private bool _numberSign = true;
 
         public FormCalculator()
         {
-
             InitializeComponent();
         }
 
-        private void btnZero_Click(object sender, EventArgs e)
+        private void btnNumber_Click(object sender, EventArgs e)
         {
-            if (txtScoreboard.Text != "0")
-                txtScoreboard.Text = txtScoreboard.Text + 0;
-        }
-
-        private void btnOne_Click(object sender, EventArgs e)
-        {
-            txtScoreboard.Text = txtScoreboard.Text + 1;
-        }
-
-        private void btnTwo_Click(object sender, EventArgs e)
-        {
-            txtScoreboard.Text = txtScoreboard.Text + 2;
-        }
-
-        private void btnThree_Click(object sender, EventArgs e)
-        {
-            txtScoreboard.Text = txtScoreboard.Text + 3;
-        }
-
-        private void btnFour_Click(object sender, EventArgs e)
-        {
-            txtScoreboard.Text = txtScoreboard.Text + 4;
-        }
-
-        private void btnFive_Click(object sender, EventArgs e)
-        {
-            txtScoreboard.Text = txtScoreboard.Text + 5;
-        }
-
-        private void btnSix_Click(object sender, EventArgs e)
-        {
-            txtScoreboard.Text = txtScoreboard.Text + 6;
-        }
-
-        private void btnSeven_Click(object sender, EventArgs e)
-        {
-            txtScoreboard.Text = txtScoreboard.Text + 7;
-        }
-
-        private void btnEight_Click(object sender, EventArgs e)
-        {
-            txtScoreboard.Text = txtScoreboard.Text + 8;
-        }
-
-        private void btnNine_Click(object sender, EventArgs e)
-        {
-            txtScoreboard.Text = txtScoreboard.Text + 9;
+            if (txtScoreboard.Text == "0")
+                txtScoreboard.Text = string.Empty;
+            txtScoreboard.Text = txtScoreboard.Text + (sender as Button).Text;
         }
 
         private void btnDecimalPoint_Click(object sender, EventArgs e)
@@ -84,124 +39,41 @@ namespace Calculator
 
         private void btnNumberSign_Click(object sender, EventArgs e)
         {
-            if (_numberSign == true)
-            {
-                _numberSign = false;
-                txtScoreboard.Text = "-" + txtScoreboard.Text;
-            }
-            else if (_numberSign == false)
-            {
-                _numberSign = true;
-                txtScoreboard.Text = txtScoreboard.Text.Replace("-", "");
-            }
+            txtScoreboard.Text = _numberSign ? "-" + txtScoreboard.Text : txtScoreboard.Text.Replace("-", ""); _numberSign = !_numberSign;
         }
 
-        private void txtBoxValue_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            txtBoxValue.ReadOnly = true;
-        }
 
-        private void btnSubtraction_Click(object sender, EventArgs e)
+        private void btnOperation_Click(object sender, EventArgs e)
         {
             var text = txtScoreboard.Text;
-            if (text.Length > 0 && text.Any(char.IsNumber))
+            var operation = char.Parse((sender as Button).Text);
+            if (decimal.TryParse(text, out var value))
             {
                 if (txtBoxValue.Text.Length == 0)
                 {
-                    _a = float.Parse(text);
-                }
-                else if (_arithmeticOperation == '-')
-                {
-                    _a -= float.Parse(text);
+                    _a = value;
                 }
                 else
                 {
-                    var b = float.Parse(text);
-                    _a = ComputingOperation(_a, b, _arithmeticOperation);
+                    var b = value;
+                    if (_arithmeticOperation == '=')
+                    {
+                        _a = ComputingOperation(_a, b, operation);
+                    }
+                    else
+                    {
+                        _a = ComputingOperation(_a, b, _arithmeticOperation);
+                    }
+
                 }
 
                 txtBoxValue.Text = _a.ToString();
                 txtScoreboard.Text = string.Empty;
             }
-            _arithmeticOperation = '-';
+            _arithmeticOperation = operation;
         }
 
-        private void btnMultiplication_Click(object sender, EventArgs e)
-        {
-            var text = txtScoreboard.Text;
-            if (text.Length > 0 && text.Any(char.IsNumber))
-            {
-                if (txtBoxValue.Text.Length == 0)
-                {
-                    _a = float.Parse(text);
-                }
-                else if (_arithmeticOperation == '*')
-                {
-                    _a *= float.Parse(text);
-                }
-                else
-                {
-                    var b = float.Parse(text);
-                    _a = ComputingOperation(_a, b, _arithmeticOperation);
-                }
-
-                txtBoxValue.Text = _a.ToString();
-                txtScoreboard.Text = string.Empty;
-            }
-            _arithmeticOperation = '*';
-        }
-
-        private void btnAddition_Click(object sender, EventArgs e)
-        {
-            var text = txtScoreboard.Text;
-            if (text.Length > 0 && text.Any(char.IsNumber))
-            {
-                if (txtBoxValue.Text.Length == 0)
-                {
-                    _a = float.Parse(text);
-                }
-                else if (_arithmeticOperation == '+')
-                {
-                    _a += float.Parse(text);
-                }
-                else
-                {
-                    var b = float.Parse(text);
-                    _a = ComputingOperation(_a, b, _arithmeticOperation);
-                }
-
-                txtBoxValue.Text = _a.ToString();
-                txtScoreboard.Text = string.Empty;
-            }
-            _arithmeticOperation = '+';
-        }
-
-        private void btnDivision_Click(object sender, EventArgs e)
-        {
-            var text = txtScoreboard.Text;
-            if (text.Length > 0 && text.Any(char.IsNumber))
-            {
-                if (txtBoxValue.Text.Length == 0)
-                {
-                    _a = float.Parse(text);
-                }
-                else if (_arithmeticOperation == '/')
-                {
-                    _a /= float.Parse(text);
-                }
-                else
-                {
-                    var b = float.Parse(text);
-                    _a = ComputingOperation(_a, b, _arithmeticOperation);
-                }
-
-                txtBoxValue.Text = _a.ToString();
-                txtScoreboard.Text = string.Empty;
-            }
-            _arithmeticOperation = '/';
-        }
-
-        private float ComputingOperation(float a, float b, char operation)
+        private decimal ComputingOperation(decimal a, decimal b, char operation)
         {
             switch (operation)
             {
@@ -212,9 +84,13 @@ namespace Calculator
                 case '*':
                     return a * b;
                 case '/':
-                    return a / b;
+                    {
+                        if (b == 0)
+                            throw new ArgumentException("Деление на 0 невозможно");
+                        return a / b;
+                    }
             }
-            return 0;
+            throw new OperationCanceledException("Не верное нажатие кнопки");
         }
 
         private void btnEqualSign_Click(object sender, EventArgs e)
@@ -222,10 +98,8 @@ namespace Calculator
             var text = txtScoreboard.Text;
 
 
-            if (text.Length > 0 && text.Any(char.IsNumber))
+            if (decimal.TryParse(text, out var b))
             {
-
-                var b = float.Parse(text);
                 if (_arithmeticOperation == '=')
                 {
                     _a = b;
