@@ -233,7 +233,7 @@
             this.btnAddition.TabIndex = 16;
             this.btnAddition.Text = "+";
             this.btnAddition.UseVisualStyleBackColor = false;
-            this.btnAddition.Click += new System.EventHandler(this.btnOperation_Click);
+            this.btnAddition.Click += new System.EventHandler(this.btnArithmeticOperation_Click);
             // 
             // btnSubtraction
             // 
@@ -244,7 +244,7 @@
             this.btnSubtraction.TabIndex = 17;
             this.btnSubtraction.Text = "-";
             this.btnSubtraction.UseVisualStyleBackColor = false;
-            this.btnSubtraction.Click += new System.EventHandler(this.btnOperation_Click);
+            this.btnSubtraction.Click += new System.EventHandler(this.btnArithmeticOperation_Click);
             // 
             // btnMultiplication
             // 
@@ -255,7 +255,7 @@
             this.btnMultiplication.TabIndex = 18;
             this.btnMultiplication.Text = "*";
             this.btnMultiplication.UseVisualStyleBackColor = false;
-            this.btnMultiplication.Click += new System.EventHandler(this.btnOperation_Click);
+            this.btnMultiplication.Click += new System.EventHandler(this.btnArithmeticOperation_Click);
             // 
             // btnDivision
             // 
@@ -266,7 +266,7 @@
             this.btnDivision.TabIndex = 19;
             this.btnDivision.Text = "/";
             this.btnDivision.UseVisualStyleBackColor = false;
-            this.btnDivision.Click += new System.EventHandler(this.btnOperation_Click);
+            this.btnDivision.Click += new System.EventHandler(this.btnArithmeticOperation_Click);
             // 
             // txtBoxValue
             // 

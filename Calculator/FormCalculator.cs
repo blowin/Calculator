@@ -2,20 +2,20 @@ namespace Calculator
 {
     public partial class FormCalculator : Form
     {
-        private decimal _a;
-        private char _arithmeticOperation;
         private bool _numberSign = true;
+        private MathEvaluator _mathhEvaluator;
 
         public FormCalculator()
         {
             InitializeComponent();
+            _mathhEvaluator = new MathEvaluator();
         }
 
         private void btnNumber_Click(object sender, EventArgs e)
         {
             if (txtScoreboard.Text == "0")
                 txtScoreboard.Text = string.Empty;
-            txtScoreboard.Text = txtScoreboard.Text + (sender as Button).Text;
+            txtScoreboard.Text = txtScoreboard.Text + ((Button)sender).Text;
         }
 
         private void btnDecimalPoint_Click(object sender, EventArgs e)
@@ -28,6 +28,7 @@ namespace Calculator
         {
             txtScoreboard.Text = string.Empty;
             txtBoxValue.Text = string.Empty;
+            _mathhEvaluator = new MathEvaluator();
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -42,80 +43,30 @@ namespace Calculator
             txtScoreboard.Text = _numberSign ? "-" + txtScoreboard.Text : txtScoreboard.Text.Replace("-", ""); _numberSign = !_numberSign;
         }
 
-
-        private void btnOperation_Click(object sender, EventArgs e)
+        private void btnArithmeticOperation_Click(object sender, EventArgs e)
         {
             var text = txtScoreboard.Text;
-            var operation = char.Parse((sender as Button).Text);
-            if (decimal.TryParse(text, out var value))
-            {
-                if (txtBoxValue.Text.Length == 0)
-                {
-                    _a = value;
-                }
-                else
-                {
-                    var b = value;
-                    if (_arithmeticOperation == '=')
-                    {
-                        _a = ComputingOperation(_a, b, operation);
-                    }
-                    else
-                    {
-                        _a = ComputingOperation(_a, b, _arithmeticOperation);
-                    }
+            var textValue = txtBoxValue.Text;
+            var operation = char.Parse(((Button)sender).Text);
 
-                }
+            _mathhEvaluator.Math(operation);
+            var valueTxtBox = _mathhEvaluator.Eval(textValue, text);
 
-                txtBoxValue.Text = _a.ToString();
-                txtScoreboard.Text = string.Empty;
-            }
-            _arithmeticOperation = operation;
-        }
-
-        private decimal ComputingOperation(decimal a, decimal b, char operation)
-        {
-            switch (operation)
-            {
-                case '+':
-                    return a + b;
-                case '-':
-                    return a - b;
-                case '*':
-                    return a * b;
-                case '/':
-                    {
-                        if (b == 0)
-                            throw new ArgumentException("Деление на 0 невозможно");
-                        return a / b;
-                    }
-            }
-            throw new OperationCanceledException("Не верное нажатие кнопки");
+            txtBoxValue.Text = valueTxtBox.ToString();
+            txtScoreboard.Text = string.Empty;
         }
 
         private void btnEqualSign_Click(object sender, EventArgs e)
         {
             var text = txtScoreboard.Text;
+            var textValue = txtBoxValue.Text;
+            var operation = char.Parse(((Button)sender).Text);
 
+            _mathhEvaluator.Math(operation);
+            var valueTxtBox = _mathhEvaluator.GetResult(textValue, text);
 
-            if (decimal.TryParse(text, out var b))
-            {
-                if (_arithmeticOperation == '=')
-                {
-                    _a = b;
-                }
-                else
-                {
-                    _a = ComputingOperation(_a, b, _arithmeticOperation);
-                }
-            }
-            else
-            {
-                _a = 0;
-            }
-            txtBoxValue.Text = _a.ToString();
+            txtBoxValue.Text = valueTxtBox.ToString();
             txtScoreboard.Text = string.Empty;
-            _arithmeticOperation = '=';
         }
 
         private void txtScoreboard_KeyPress(object sender, KeyPressEventArgs e)
