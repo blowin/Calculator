@@ -3,12 +3,12 @@ namespace Calculator
     public partial class FormCalculator : Form
     {
         private bool _numberSign = true;
-        private MathEvaluator _mathhEvaluator;
+        private MathCalculator _calculator;
 
         public FormCalculator()
         {
             InitializeComponent();
-            _mathhEvaluator = new MathEvaluator();
+            _calculator = new MathCalculator();
         }
 
         private void btnNumber_Click(object sender, EventArgs e)
@@ -28,7 +28,7 @@ namespace Calculator
         {
             txtScoreboard.Text = string.Empty;
             txtBoxValue.Text = string.Empty;
-            _mathhEvaluator = new MathEvaluator();
+            _calculator = new MathCalculator();
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -45,12 +45,11 @@ namespace Calculator
 
         private void btnArithmeticOperation_Click(object sender, EventArgs e)
         {
-            var text = txtScoreboard.Text;
-            var textValue = txtBoxValue.Text;
+            var textFromInputPad = txtScoreboard.Text;
+            var textFromOutputField = txtBoxValue.Text;
             var operation = char.Parse(((Button)sender).Text);
 
-            _mathhEvaluator.Math(operation);
-            var valueTxtBox = _mathhEvaluator.Eval(textValue, text);
+            var valueTxtBox = _calculator.ArithmeticAction(textFromOutputField, textFromInputPad, operation);
 
             txtBoxValue.Text = valueTxtBox.ToString();
             txtScoreboard.Text = string.Empty;
@@ -58,12 +57,11 @@ namespace Calculator
 
         private void btnEqualSign_Click(object sender, EventArgs e)
         {
-            var text = txtScoreboard.Text;
-            var textValue = txtBoxValue.Text;
+            var textFromInputPad = txtScoreboard.Text;
+            var textFromOutputField = txtBoxValue.Text;
             var operation = char.Parse(((Button)sender).Text);
 
-            _mathhEvaluator.Math(operation);
-            var valueTxtBox = _mathhEvaluator.GetResult(textValue, text);
+            var valueTxtBox = _calculator.CountResult(textFromOutputField, textFromInputPad);
 
             txtBoxValue.Text = valueTxtBox.ToString();
             txtScoreboard.Text = string.Empty;
