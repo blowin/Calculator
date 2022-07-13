@@ -20,15 +20,11 @@
         
         public IDigit Eval(IDigit x, IDigit y)
         {
-            if (_pastOperation == null)
-                return DecimalDigit.Zero;
-
-            var ret = EvalCore(x, y, _pastOperation.Value);
             return _pastOperation switch
             {
                 null => DecimalDigit.Zero,
                 '=' => y,
-                _ => ret
+                _ => EvalCore(x, y, _pastOperation.Value)
             };
         }
 
